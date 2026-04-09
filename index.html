@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyQuest — Learn Python</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- STAR BACKGROUND -->
+  <div class="stars" id="stars"></div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-icon">🐍</span>
+      <span class="logo-text">Py<span class="accent">Quest</span></span>
+    </div>
+    <nav class="top-nav">
+      <button class="nav-btn active" data-section="home" onclick="showSection('home')">🏠 Home</button>
+      <button class="nav-btn" data-section="lessons" onclick="showSection('lessons')">📚 Lessons</button>
+      <button class="nav-btn" data-section="playground" onclick="showSection('playground')">⚡ Playground</button>
+      <button class="nav-btn" data-section="quiz" onclick="showSection('quiz')">🎯 Quiz</button>
+    </nav>
+    <div class="xp-bar-wrap">
+      <div class="xp-label">⭐ <span id="xp-display">0</span> XP</div>
+    </div>
+  </header>
+
+  <!-- HOME SECTION -->
+  <section id="section-home" class="section active">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Learn Python.<br/><span class="gradient-text">Level Up Your Brain.</span></h1>
+        <p class="hero-sub">Go from total beginner to coding hero — one quest at a time. No experience needed!</p>
+        <button class="cta-btn" onclick="showSection('lessons')">🚀 Start Learning</button>
+        <button class="cta-btn secondary" onclick="showSection('playground')">⚡ Jump to Playground</button>
+      </div>
+      <div class="hero-art">
+        <div class="snake-graphic">
+          <div class="snake-body"></div>
+          <div class="floating-code">
+            <div class="code-chip" style="--d:0s">print("Hello!")</div>
+            <div class="code-chip" style="--d:0.4s">x = 42</div>
+            <div class="code-chip" style="--d:0.8s">for i in range(10):</div>
+            <div class="code-chip" style="--d:1.2s">if x > 5:</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-overview">
+      <h2 class="section-title">📊 Your Progress</h2>
+      <div class="progress-cards" id="progress-cards"></div>
+    </div>
+
+    <div class="badges-section">
+      <h2 class="section-title">🏆 Badges Earned</h2>
+      <div class="badges-row" id="badges-display"></div>
+    </div>
+  </section>
+
+  <!-- LESSONS SECTION -->
+  <section id="section-lessons" class="section">
+    <h2 class="section-title">📚 Python Lessons</h2>
+    <p class="section-sub">Pick a topic and start your quest!</p>
+    <div class="lessons-grid" id="lessons-grid"></div>
+    <div class="lesson-content" id="lesson-content" style="display:none">
+      <button class="back-btn" onclick="closelesson()">← Back to Lessons</button>
+      <div id="lesson-body"></div>
+    </div>
+  </section>
+
+  <!-- PLAYGROUND SECTION -->
+  <section id="section-playground" class="section">
+    <h2 class="section-title">⚡ Code Playground</h2>
+    <p class="section-sub">Write Python code here and see it run (simulated)!</p>
+    <div class="playground-wrap">
+      <div class="editor-panel">
+        <div class="editor-toolbar">
+          <span class="toolbar-label">🐍 Python Editor</span>
+          <div class="toolbar-btns">
+            <button class="tool-btn" onclick="clearEditor()">🗑 Clear</button>
+            <button class="tool-btn" onclick="loadExample()">📋 Load Example</button>
+            <button class="run-btn" onclick="runCode()">▶ Run Code</button>
+          </div>
+        </div>
+        <div class="line-numbers" id="line-numbers">1</div>
+        <textarea id="code-editor" class="code-editor" spellcheck="false" placeholder="# Write your Python code here!&#10;print('Hello, World!')" oninput="updateLineNumbers()" onkeydown="handleTab(event)"></textarea>
+      </div>
+      <div class="output-panel">
+        <div class="output-toolbar">
+          <span class="toolbar-label">📟 Output</span>
+          <button class="tool-btn" onclick="clearOutput()">🗑 Clear</button>
+        </div>
+        <div class="output-box" id="output-box">
+          <span class="output-placeholder">Output will appear here when you run your code...</span>
+        </div>
+      </div>
+    </div>
+    <div class="snippet-bar">
+      <span class="snippet-label">Quick Snippets:</span>
+      <button class="snippet-btn" onclick="insertSnippet('print')">print()</button>
+      <button class="snippet-btn" onclick="insertSnippet('for')">for loop</button>
+      <button class="snippet-btn" onclick="insertSnippet('while')">while loop</button>
+      <button class="snippet-btn" onclick="insertSnippet('if')">if/else</button>
+      <button class="snippet-btn" onclick="insertSnippet('function')">function</button>
+      <button class="snippet-btn" onclick="insertSnippet('list')">list</button>
+      <button class="snippet-btn" onclick="insertSnippet('dict')">dictionary</button>
+    </div>
+  </section>
+
+  <!-- QUIZ SECTION -->
+  <section id="section-quiz" class="section">
+    <h2 class="section-title">🎯 Python Quiz</h2>
+    <p class="section-sub">Test your knowledge and earn XP!</p>
+    <div id="quiz-container">
+      <div class="quiz-select" id="quiz-select">
+        <h3>Choose a Quiz Topic</h3>
+        <div class="quiz-topics" id="quiz-topics"></div>
+      </div>
+      <div class="quiz-active" id="quiz-active" style="display:none">
+        <div class="quiz-header">
+          <div class="quiz-meta">
+            <span id="quiz-topic-label"></span>
+            <span id="quiz-progress-label"></span>
+          </div>
+          <div class="quiz-score-label">Score: <span id="quiz-score">0</span></div>
+        </div>
+        <div class="quiz-card" id="quiz-card">
+          <div class="question-text" id="question-text"></div>
+          <div class="options-grid" id="options-grid"></div>
+          <div class="quiz-feedback" id="quiz-feedback" style="display:none"></div>
+          <button class="next-btn" id="next-btn" onclick="nextQuestion()" style="display:none">Next Question →</button>
+        </div>
+      </div>
+      <div class="quiz-results" id="quiz-results" style="display:none">
+        <div class="result-card">
+          <div class="result-emoji" id="result-emoji">🏆</div>
+          <h3 id="result-title">Quiz Complete!</h3>
+          <div class="result-score" id="result-score"></div>
+          <div class="result-xp" id="result-xp"></div>
+          <button class="cta-btn" onclick="resetQuiz()">Try Again</button>
+          <button class="cta-btn secondary" onclick="showSection('quiz')">Other Topics</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="data.js"></script>
+  <script src="quiz.js"></script>
+  <script src="playground.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
